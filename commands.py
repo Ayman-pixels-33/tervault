@@ -3,32 +3,24 @@ from gemini_api import search_command as gemini_search
 from database import delete_command as db_delete
 from backup import list_backups, import_backup as db_import
 from backup import export_backup
-
 from database import get_all_commands
-import pathlib
-import sqlite3
 
 def add(command, description):
-    """أضف أمر"""
     return db_add(command, description)
 
 def search(query):
-    """ابحث عن أمر"""
     all_commands = get_all_commands()
-    result = gemini_search(query, all_commands)
-    return result
+    return gemini_search(query, all_commands)
 
 def delete(command_id):
-    """حذف أمر"""
-    result = db_delete(command_id)
-    return result
+    return db_delete(command_id)
 
 def list_all():
-    """اعرض الكل"""
     return get_all_commands()
+
 def export():
-    """Export backup"""
-    export_backup()
+    """تستدعي التصدير الجديد وتمرر حالته"""
+    return export_backup()
 
 def import_backup():
     backups = list_backups()
@@ -49,9 +41,3 @@ def import_backup():
         db_import(backup_name, merge=merge)
     except Exception as e:
         print(f"✗ Error: {e}")
-
-#if __name__ == "__main__":
-#    # اختبر
-#    add("ls -la", "List files")
-#    print(list_all())
-#    print(search("أريد أن أرى الملفات"))

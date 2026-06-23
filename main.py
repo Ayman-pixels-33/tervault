@@ -8,9 +8,7 @@ from database import init_db
 import os
 
 def main():
-    """الـ واجهة الرئيسية"""
     init_db()
-    # تأكد من API key
     if not get_api_key():
         api_key = input("Enter Gemini API key: ")
         save_api_key(api_key)
@@ -19,7 +17,6 @@ def main():
         os.system("clear")
         console = Console()
 
-        # الـ menu
         menu_text = """[cyan]1. Add command
 2. Search
 3. List all
@@ -45,7 +42,6 @@ def main():
                     console.print("[red]✗ Already exists[/red]")
             else:
                 console.print("[red]✗ Missing fields[/red]")
-
             input("Press Enter to continue...")
 
         elif choice == "2":
@@ -58,7 +54,6 @@ def main():
                 console.print(f"[green]Result: {result}[/green]")
             else:
                 console.print("[red]✗ Empty query[/red]")
-
             input("Press Enter to continue...")
 
         elif choice == "3":
@@ -74,11 +69,9 @@ def main():
 
                 for cmd in cmds:
                     table.add_row(str(cmd[0]), cmd[1], cmd[2])
-
                 console.print(table)
             else:
                 console.print("[yellow]No commands found[/yellow]")
-
             input("Press Enter to continue...")
 
         elif choice == "4":
@@ -93,11 +86,9 @@ def main():
 
                 for cmd in cmds:
                     table.add_row(str(cmd[0]), cmd[1])
-
                 console.print(table)
                 cmd_id = input("Enter ID to delete: ").strip()
 
-                # التحقق الذكي من المدخلات قبل التمرير لقاعدة البيانات
                 if not cmd_id or not cmd_id.isdigit():
                     console.print("[red]✗ Invalid ID. Please enter a valid number.[/red]")
                 else:
@@ -108,7 +99,6 @@ def main():
                         console.print("[red]✗ Failed to delete (ID might not exist)[/red]")
             else:
                 console.print("[yellow]No commands found to delete[/yellow]")
-
             input("Press Enter to continue...")
 
         elif choice == "5":
@@ -120,21 +110,17 @@ def main():
 
             panel = Panel(backup_text, title="Backup Menu", border_style="white")
             console.print(Align.center(panel))
-
             sub_choice = input("\nChoose: ").strip()
 
             if sub_choice == "1":
-                export()
-                console.print("[green]✓ Exported[/green]")
+                export()  # الدالة تتولى الطباعة الصحيحة داخلياً الآن بناءً على النتيجة الحقيقية
             elif sub_choice == "2":
                 import_backup()
-
             input("Press Enter to continue...")
 
         elif choice == "6":
             console.print("[bold cyan]Goodbye![/bold cyan]")
             break
-
         else:
             console.print("[red]✗ Invalid choice[/red]")
             input("Press Enter to continue...")

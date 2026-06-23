@@ -4,7 +4,7 @@ from datetime import datetime
 from pathlib import Path
 
 BACKUP_DIR = Path.home() / ".tervault" / "backups"
-DB_PATH = Path("commands.db")  # تحويله إلى Path أيضاً لتوحيد الأسلوب
+DB_PATH = Path.home() / ".tervault" / "commands.db"  # المسار المطلق الموحد
 TABLE_NAME = "commands"
 
 def export_backup():
@@ -31,12 +31,11 @@ def list_backups():
         print("No backups folder")
         return []
 
-    # إرجاع أسماء الملفات مرتبة من الأحدث للأقدم
     backups = sorted(BACKUP_DIR.glob("*.db"), key=lambda x: x.stat().st_mtime, reverse=True)
     return [b.name for b in backups]
 
 
-def import_backup(backup_name, merge=False):  # جعلت القيمة الافتراضية False للاستبدال المباشر كأمان
+def import_backup(backup_name, merge=False):
     backup_path = BACKUP_DIR / backup_name
 
     if not backup_path.exists():
@@ -46,24 +45,15 @@ def import_backup(backup_name, merge=False):  # جعلت القيمة الافت
     try:
         if merge:
             print(f"Merging data from {backup_name} into current database...")
-
-            # الاتصال بقاعدة البيانات الحالية
             conn = sqlite3.connect(DB_PATH)
             cursor = conn.cursor()
-
-            # ربط القاعدة الاحتياطية بالجلسة الحالية باسم مستعار (backup_db)
             cursor.execute(f"ATTACH DATABASE '{backup_path}' AS backup_db")
-
-            # دمج البيانات: إدخال السجلات غير الموجودة وتجاهل المتكرر بناءً على الـ Primary Key
             cursor.execute(
                 f"INSERT OR REPLACE INTO {TABLE_NAME} SELECT * FROM backup_db.{TABLE_NAME}"
             )
-
-            # حفظ التغييرات وفصل القاعدة الاحتياطية
             conn.commit()
             cursor.execute("DETACH DATABASE backup_db")
             conn.close()
-
             print(f"✓ Merge completed successfully!")
             return True
         else:
@@ -73,8 +63,3 @@ def import_backup(backup_name, merge=False):  # جعلت القيمة الافت
     except Exception as e:
         print(f"✗ Error during import: {e}")
         return False
-
-
-#if __name__ == "__main__":
-#    export_backup()
-#    print("Available backups:", list_backups())
