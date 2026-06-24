@@ -1,6 +1,6 @@
 # Tervault
 
-#### Video URL: [Insert your YouTube demo video link here]
+#### Video URL: [https://youtu.be/tLpPWBJ9PB4]
 
 #### Description:
 Tervault is a high-performance, dark-theme optimized Command-Line Interface (CLI) tool designed for Linux power users and developers to securely store, organize, and intelligently retrieve terminal commands. Developed as a final project for Harvard's CS50x, Tervault eliminates the friction of forgetting complex shell syntax by creating an isolated local vault that integrates with the Google Gemini API (`gemini-2.5-flash`) for AI-driven semantic searching.
